@@ -29,6 +29,7 @@ music_search_flag = False
 weather_flag = False
 omdb_api_key = str(os.getenv('OMDB_API_KEY'))
 spotify_api_key = str(os.getenv('SPOTIFY_API_KEY'))
+weather_api_key = str(os.getenv('WEATHER_API_KEY'))
 
 
 
@@ -77,9 +78,10 @@ async def command_Start_Finance(message: types.Message):
 
 @dp.message_handler(commands=['balance'])
 async def command_balance(message: types.Message):
+    global nickname
     user_id = message.from_user.id
     balance = accounts.get(user_id, 0)
-    await message.answer(f"Your current balance: {balance} MDL", reply_markup=finance)
+    await message.answer(f"Your current balance, {nickname}: {balance} MDL", reply_markup=finance)
     print(balance)
 
 
@@ -207,9 +209,10 @@ async def echo_message(message: types.Message):
             await message.answer("No track found. Anything else?", reply_markup=mainCommands)
 
     elif weather_flag:
+        global weather_api_key
         location = message.text
 
-        url = f'https://api.weatherapi.com/v1/current.json?key=3dfed9f80ef645f58f9184555231306&q={location}'
+        url = f'https://api.weatherapi.com/v1/current.json?key={weather_api_key}={location}'
 
         response = requests.get(url)
         data = response.json()
